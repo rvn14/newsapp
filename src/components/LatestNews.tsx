@@ -125,8 +125,10 @@ const LatestNews: FC = () => {
                   summary={element.long_summary}
                   imgUrl={
                     isGroup
-                      ? element.articles![0].cover_image || ""
-                      : element.cover_image || ""
+                      ? element.articles![0].cover_image ||
+                        "https://placehold.co/600x400?text=News+Image"
+                      : element.cover_image ||
+                        "https://placehold.co/600x400?text=News+Image"
                   }
                   publishedDate={
                     isGroup
