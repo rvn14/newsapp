@@ -17,11 +17,11 @@ interface InfiniteCarouselProps {
   speed?: number;
   /** Array of grouped news data */
   data: {
-    _id: { $oid: string };
+    _id: string;
     group_id: string;
     representative_title: string;
     articles: Article[];
-    [key: string]: any;
+    // [key: string]: any;
   }[];
 }
 
@@ -56,18 +56,21 @@ const InfiniteCarousel: FC<InfiniteCarouselProps> = ({ data, speed = 0.5 }) => {
 
   return (
     <div ref={containerRef} className="overflow-hidden whitespace-nowrap">
-      <div className="flex flex-nowrap items-center justify-start gap-4"> 
+      <div className="flex flex-nowrap items-center justify-start gap-4">
         {/* Duplicate items to loop seamlessly */}
         {[...data, ...data].map((element) => {
-            const isGroup = Boolean(element.group_id)
-            if (isGroup && (!element.articles || element.articles.length === 0)) {
-                return null;
-              }
+          const isGroup = Boolean(element.group_id);
+          if (isGroup && (!element.articles || element.articles.length === 0)) {
+            return null;
+          }
 
-
-            return (
-                <div className="p-4 bg-muted dark:bg-darkprimary shadow-md">{isGroup ? element.representative_title || "" : element.title || ""}</div>
-            )
+          return (
+            <div className="p-4 bg-muted dark:bg-darkprimary shadow-md">
+              {isGroup
+                ? element.representative_title || ""
+                : element.title || ""}
+            </div>
+          );
         })}
       </div>
     </div>
