@@ -34,7 +34,7 @@ const HeadSection = () => {
 
   return (
     <div className='text-white w-full'>
-        <div className="dateBar flex justify-between items-center bg-darkprimary p-4 py-2">
+        <div className="dateBar flex justify-between items-center bg-darkprimary p-6 py-2">
             <div className='text-sm font-light'>{currentDate}</div>
             <div className='flex gap-3'> <FaInstagram className='cursor-pointer'/><FaFacebook className='cursor-pointer' /><FaXTwitter className='cursor-pointer' /><FaYoutube className='cursor-pointer' />  </div>
         </div>

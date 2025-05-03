@@ -1,5 +1,5 @@
 import * as React from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom"
 
 import {
   Select,
@@ -11,6 +11,16 @@ import {
 
 export function SelectCategory() {
     const navigate = useNavigate()
+    const location = useLocation()
+    const [selectedCategory, setSelectedCategory] = React.useState<string>("")
+    
+    // Reset selection when on root path
+    React.useEffect(() => {
+      if (location.pathname === '/') {
+        setSelectedCategory("")
+      }
+    }, [location.pathname])
+    
     const categories: string[] = [
         "General",
         "Health",
@@ -22,7 +32,13 @@ export function SelectCategory() {
 
   return (
     <div className='w-full bg-transparent'>
-        <Select onValueChange={(value) => navigate(`/top-headlines/${value}`)} >
+        <Select 
+          value={selectedCategory}
+          onValueChange={(value) => {
+            setSelectedCategory(value)
+            navigate(`/top-headlines/${value}`)
+          }} 
+        >
         <SelectTrigger className="bg-transparent dark:bg-darkprimary w-full text-white font-normal text-md select-none focus:outline-none focus-visible:ring-0 focus:border-0 border-0 focus:ring-0 cursor-pointer">
             <SelectValue className="text-white bg-transparent" placeholder="More" />
         </SelectTrigger>
