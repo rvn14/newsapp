@@ -1,7 +1,7 @@
 // EverythingCard.tsx
+import { ArrowBigRight, ArrowRightIcon } from "lucide-react";
 import React, { FC } from "react";
   
-
 interface EverythingCardProps {
   title: string;
   description: string;
@@ -16,64 +16,74 @@ interface EverythingCardProps {
   author?: string | null;
 }
 
-const EverythingCard: FC<EverythingCardProps> = ({ title, imgUrl, description, category, id }) => {
+const EverythingCard: FC<EverythingCardProps> = ({ 
+  title, 
+  imgUrl, 
+  description, 
+  category, 
+  id, 
+  publishedDate, 
+  newsProvider, 
+  author, 
+  url 
+}) => {
+  // Format the date to be more readable
+  const formattedDate = new Date(publishedDate).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  });
+  
   return (
-    <div className="shadow-md rounded-lg overflow-hidden bg-white dark:bg-darkprimary min-w-sm mx-auto min-h-[450px]">
-        <div className="relative w-full flex justify-center">
-           <img
-            className="object-cover w-full min-h-[250px] max-h-[250px]"
-            src={imgUrl}
-            alt={title}
-           />
-           <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-black/20 p-4 text-white text-lg font-bold line-clamp-2 h-full flex items-end">
-            {title}
-           </div>
-       </div>
-       <div>
-        <div className="description flex flex-col items-center flex-grow justify-center p-4">
-            <p className="text-primary text-lg">
-              {description}
-            </p>
-          </div>
-       </div>
+    <div className="shadow-lg rounded-lg overflow-hidden bg-white dark:bg-darkprimary min-w-sm mx-auto hover:shadow-xl transition-shadow duration-300 border border-gray-100 dark:border-gray-800">
+      {/* Image section with category badge */}
+      <div className="relative">
+        <img
+          className="object-cover w-full min-h-48 max-h-48"
+          src={imgUrl}
+          alt={title}
+        />
+        <div className="absolute top-4 left-4">
+          <span className="bg-red-600 text-white px-3 py-1 text-xs font-semibold rounded-full uppercase tracking-wider">
+            {category}
+          </span>
+        </div>
+      </div>
+      
+      {/* Content section */}
+      <div className="p-5 flex flex-col gap-2">
+        {/* Title */}
+        <h2 className="font-serif font-bold text-xl mb-2 line-clamp-2 text-gray-800 dark:text-white">
+          {title}
+        </h2>
+        
+        {/* Meta information */}
+        <div className="flex items-center text-xs text-gray-500 dark:text-gray-400 mb-3">
+          
+          <span className="mr-3">{formattedDate}</span>
+          
+        </div>
+        
+        {/* Description */}
+        <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-3">
+          {description}
+        </p>
+        
+        {/* Read more link */}
+        <div className="mt-auto pt-2">
+          <a 
+            href={url || `#${id}`} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="text-red-600 dark:text-red-400 text-sm font-medium hover:underline flex items-end"
+          >
+            Read full story
+            <ArrowRightIcon size={14 }/>
+          </a>
+        </div>
+      </div>
     </div>
   );
 };
 
 export default EverythingCard;
-
-
-// {/* <div className="mt-10 pb-10 shadow-lg rounded-lg overflow-hidden border bg-white max-w-sm mx-auto min-h-[450px]">
-//       <div className="p-6 pt-8 pr-6 pl-6 flex flex-col h-full">
-//         {/* Title */}
-//         <b className="title text-lg font-bold text-center line-clamp-2">
-//           {title}
-//         </b>
-
-//         {/* Image */}
-//         <div className="w-full flex justify-center">
-//           <img
-//             className="w-60 h-48 object-cover rounded"
-//             src={imgUrl}
-//             alt={title}
-//           />
-//         </div>
-
-//         {/* Description */}
-//         <div className="description flex flex-col items-center flex-grow justify-center">
-//           <p className="description-text leading-6 text-gray-700 text-center line-clamp-3">
-//             {description}
-//           </p>
-//         </div>
-
-//         {/* Anchor Link at the bottom */}
-//         <div className="flex justify-center mt-auto pt-4">
-//           <Link
-//             to={`/news?category=${encodeURIComponent(category)}&id=${encodeURIComponent(id)}`}
-//             className="text-blue-500 font-semibold text-lg hover:text-blue-700 transition-all duration-300 ease-in-out transform hover:scale-110"
-//           >
-//             <FontAwesomeIcon icon={faCircleChevronDown} className="text-2xl" />
-//           </Link>
-//         </div>
-//       </div>
-//     </div> */}
