@@ -1,5 +1,5 @@
 // InfiniteCarousel.tsx
-import React, { FC, useRef, useEffect } from "react";
+import { FC, useRef, useEffect } from "react";
 
 interface Article {
   id: string;
@@ -19,8 +19,9 @@ interface InfiniteCarouselProps {
   data: {
     _id: string;
     group_id: string;
-    representative_title: string;
+    representative_title?: string;
     articles: Article[];
+    title?: string;
     // [key: string]: any;
   }[];
 }

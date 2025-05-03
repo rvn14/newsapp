@@ -4,7 +4,7 @@ import EverythingCard from "./EverythingCard";
 import Loader from "./Loader";
 // import { dummy } from "../assets/dummyData";
 // // import NewsSlider from "./NewsSlider";
-// import InfiniteCarousel from "./NewsSlider";
+import InfiniteCarousel from "./NewsSlider";
 
 interface Article {
   url: string;
@@ -37,7 +37,6 @@ interface NewsItem {
 const LatestNews: FC = () => {
   // const dummyData = dummy;
   const [data, setData] = useState<NewsItem[]>([]);
-  console.log(data);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -81,7 +80,7 @@ const LatestNews: FC = () => {
     <div className="bg-background p-16">
       {error && <div className="text-red-500 mb-4">{error}</div>}
       <div className="w-full m-4">
-        {/* {!isLoading && <InfiniteCarousel data={dummyData} speed={0.5} />} */}
+        {!isLoading && <InfiniteCarousel data={data} speed={0.5} />}
       </div>
       <div className="font-semibold justify-center w-full items-center mb-8">
         {!isLoading && (
