@@ -14,6 +14,7 @@ function App() {
 
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <div className="min-h-screen w-full">
         <BrowserRouter>
           <HeadSection />
           <Routes>
@@ -24,6 +25,7 @@ function App() {
           </Routes>
           <Footer />
         </BrowserRouter>
+      </div>
     </ThemeProvider>
 
   );

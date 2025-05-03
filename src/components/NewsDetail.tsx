@@ -1,6 +1,7 @@
 // NewsDetail.tsx
 import React, { FC, useEffect, useState, SyntheticEvent } from "react";
 import { useLocation } from "react-router-dom";
+import { dummy } from "../assets/dummyData";
 
 interface Article {
   id: string;
@@ -32,13 +33,31 @@ const shortenUrl = (url: string): string => {
   }
 };
 
+// Helper to format date from ISO string to readable format
+const formatDate = (dateString: string): string => {
+  try {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  } catch (err) {
+    console.error("Date formatting error:", err);
+    return dateString;
+  }
+};
+
 const NewsDetail: FC = () => {
+  const news = dummy[0];
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const category = params.get("category");
   const id = params.get("id");
 
-  const [news, setNews] = useState<NewsDetailType | null>(null);
+  const [neews, setNews] = useState<NewsDetailType | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -69,10 +88,10 @@ const NewsDetail: FC = () => {
     })();
   }, [category, id]);
 
-  if (isLoading)
-    return <p className="text-center text-white text-lg">Loading...</p>;
-  if (error)
-    return <p className="text-center text-red-400 text-lg">{error}</p>;
+  // if (isLoading)
+  //   return <p className="text-center text-white text-lg">Loading...</p>;
+  // if (error)
+  //   return <p className="text-center text-red-400 text-lg">{error}</p>;
   if (!news)
     return (
       <p className="text-center text-red-400 text-lg">
@@ -91,11 +110,32 @@ const NewsDetail: FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-950 to-purple-950 text-white p-6">
-      <div className="container mx-auto max-w-4xl">
+    <div className="min-h-screen w-full flex flex-col items-center bg-background p-4 md:p-6">
+      {!isLoading && (
+        <div className="w-full max-w-4xl  mx-auto pb-16">
+        {/* Category Badge */}
+        {category && (
+          <div className="mb-4 flex justify-between items-center">
+            <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-800 text-white shadow-sm">
+              {category}
+            </span>
+            <span className="">
+            {formatDate(
+                    isGroup
+                      ? typeof news.articles![0].date_published === "string"
+                        ? news.articles![0].date_published
+                        : (news.articles![0].date_published as { $date: string }).$date
+                      : typeof news.date_published === "string"
+                      ? news.date_published
+                      : news.date_published.$date
+                  )}
+            </span>
+          </div>
+        )}
+        
         {/* Title */}
         <h1
-          className="text-3xl sm:text-4xl font-bold mb-6 leading-tight"
+          className="text-3xl sm:text-5xl font-black pb-4 sm:pb-6 leading-tight"
           style={{ fontFamily: "'Noto Sans Sinhala', sans-serif" }}
         >
           {isGroup ? news.representative_title! : news.title}
@@ -107,26 +147,27 @@ const NewsDetail: FC = () => {
             ? news.articles && news.articles[0].cover_image
             : news.cover_image
         ) && (
-          <img
-            className="w-full max-w-md h-auto object-cover rounded-lg shadow-lg mb-6 mx-auto"
-            src={
-              isGroup ? news.articles![0].cover_image : news.cover_image
-            }
-            alt={mainArticle?.title ?? "News cover image"}
-            onError={(e: SyntheticEvent<HTMLImageElement, Event>) => {
-              (e.target as HTMLImageElement).src = "/fallback-image.jpg";
-            }}
-          />
+          <div className="w-full flex justify-center mb-8">
+            <img
+              className="w-full max-w-md h-auto object-cover rounded-lg shadow-lg"
+              src={
+                isGroup ? news.articles![0].cover_image : news.cover_image
+              }
+              alt={mainArticle?.title ?? "News cover image"}
+              onError={(e: SyntheticEvent<HTMLImageElement, Event>) => {
+                (e.target as HTMLImageElement).src = "/fallback-image.jpg";
+              }}
+            />
+          </div>
         )}
 
         {/* Summary */}
-        <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-3">Summary</h2>
-          <p className="text-gray-200 leading-relaxed">{news.long_summary}</p>
+        <section className="pt-4 w-full">
+          <p className=" leading-relaxed">{news.long_summary}</p>
         </section>
 
         {/* Article URLs */}
-        <section className="mb-8">
+        <section className="pt-4">
           <h2 className="text-xl font-semibold mb-3">Article URLs</h2>
           {uniqueArticleUrls.length > 0 ? (
             <ul className="space-y-2">
@@ -179,6 +220,7 @@ const NewsDetail: FC = () => {
           </section>
         )}
       </div>
+      )}
     </div>
   );
 };

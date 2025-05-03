@@ -1,6 +1,7 @@
 // EverythingCard.tsx
 import { ArrowBigRight, ArrowRightIcon } from "lucide-react";
 import React, { FC } from "react";
+import { Link } from "react-router-dom";
   
 interface EverythingCardProps {
   title: string;
@@ -35,13 +36,16 @@ const EverythingCard: FC<EverythingCardProps> = ({
   });
   
   return (
-    <div className="shadow-lg rounded-lg overflow-hidden bg-white dark:bg-darkprimary min-w-sm mx-auto hover:shadow-xl transition-shadow duration-300 border border-gray-100 dark:border-gray-800">
+    <div className="shadow-lg rounded-lg overflow-hidden bg-white dark:bg-darkprimary w-full hover:shadow-xl transition-shadow duration-300 border border-gray-100 dark:border-gray-800">
       {/* Image section with category badge */}
-      <div className="relative">
+      <div className="relative overflow-hidden ">
         <img
-          className="object-cover w-full min-h-48 max-h-48"
+          className="object-cover w-full object-center max-h-48 min-h-48 hover:scale-103 transition-transform duration-300"
           src={imgUrl}
           alt={title}
+          onError={(e) => {
+            e.currentTarget.src = 'https://placehold.co/600x400?text=News+Image';
+          }}
         />
         <div className="absolute top-4 left-4">
           <span className="bg-red-600 text-white px-3 py-1 text-xs font-semibold rounded-full uppercase tracking-wider">
@@ -71,15 +75,13 @@ const EverythingCard: FC<EverythingCardProps> = ({
         
         {/* Read more link */}
         <div className="mt-auto pt-2">
-          <a 
-            href={url || `#${id}`} 
-            target="_blank" 
-            rel="noopener noreferrer"
+          <Link 
+            to={`/news?category=${category}&id=${id}`}
             className="text-red-600 dark:text-red-400 text-sm font-medium hover:underline flex items-end"
           >
             Read full story
             <ArrowRightIcon size={14 }/>
-          </a>
+          </Link>
         </div>
       </div>
     </div>

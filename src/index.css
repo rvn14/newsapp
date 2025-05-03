@@ -145,6 +145,9 @@
 }
 
 /* this is styles from the original */
+::-webkit-scrollbar{
+  display: none;
+}
 
 * {
   margin: 0;
@@ -154,7 +157,7 @@
 }
 
 html, body {
-  overflow-x: hidden;
+  
   scroll-behavior: smooth;
 }
 

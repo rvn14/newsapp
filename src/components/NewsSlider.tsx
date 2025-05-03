@@ -58,7 +58,7 @@ const InfiniteCarousel: FC<InfiniteCarouselProps> = ({ data, speed = 0.5 }) => {
     <div ref={containerRef} className="overflow-hidden whitespace-nowrap">
       <div className="flex flex-nowrap items-center justify-start gap-4"> 
         {/* Duplicate items to loop seamlessly */}
-        {[...data, ...data].map((element, idx) => {
+        {[...data, ...data].map((element) => {
             const isGroup = Boolean(element.group_id)
             if (isGroup && (!element.articles || element.articles.length === 0)) {
                 return null;
@@ -66,7 +66,7 @@ const InfiniteCarousel: FC<InfiniteCarouselProps> = ({ data, speed = 0.5 }) => {
 
 
             return (
-                <div className="p-4 bg-white dark:bg-darkprimary shadow-md">{isGroup ? element.representative_title || "" : element.title || ""}</div>
+                <div className="p-4 bg-muted dark:bg-darkprimary shadow-md">{isGroup ? element.representative_title || "" : element.title || ""}</div>
             )
         })}
       </div>

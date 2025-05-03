@@ -3,6 +3,8 @@ import React, { FC, useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import EverythingCard from "./EverythingCard";
 import Loader from "./Loader";
+import InfiniteCarousel from "./NewsSlider";
+import { dummy } from "../assets/dummyData";
 
 interface SourceType {
   name?: string;
@@ -21,6 +23,7 @@ interface TopHeadlineItem {
 }
 
 const TopHeadlines: FC = () => {
+  const dummyData = dummy;
   const { category } = useParams<{ category: string }>();
   const [data, setData] = useState<TopHeadlineItem[]>([]);
   const [page, setPage] = useState<number>(1);
@@ -63,58 +66,69 @@ const TopHeadlines: FC = () => {
   }, [page, category]);
 
   return (
-    <>
-      {error && (
-        <div className="text-red-500 mb-4 flex items-center gap-4">
-          <span>{error}</span>
-          <button
-            onClick={() => setPage((prev) => prev)}
-            className="bg-blue-500 text-white px-4 py-2 rounded"
-          >
-            Retry
-          </button>
-        </div>
-      )}
-
-      <div className="today-header mt-8 mb-4 text-center font-semibold text-3xl text-gray-800">
-        <h3>{category} News</h3>
+    <div className="bg-background p-16">
+      {error && <div className="text-red-500 mb-4">{error}</div>}
+      <div className="w-full m-4">
+        {!isLoading && <InfiniteCarousel data={dummyData} speed={0.5} />}
       </div>
+      <div className="font-semibold justify-center w-full items-center mb-8">
+        {!isLoading && <div className="w-fit flex text-3xl font-bold font-inter"><span>{category} News</span></div>}
+        {!isLoading && <div className="border-1 border-primary w-full opacity-60 mb-8"></div>}
+      </div>
+      <div className="flex justify-center items-center mb-8 p-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-8 ">
+          {!isLoading ? (
+            dummyData.map((element, index) => {
+              const isGroup = Boolean(element.group_id);
 
-      <div className="mt-16 mb-10 cards grid grid-cols-1 gap-4 xs:p-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 md:px-16 lg:gap-6 xl:gap-8">
-        {!isLoading ? (
-          data.length > 0 ? (
-            data.map((element, index) => (
-              <EverythingCard
-                key={index}
-                title={element.title}
-                description={element.summary}
-                imgUrl={element.cover_image}
-                publishedDate={element.publishedAt}
-                url={element.url}
-                author={element.author ?? ""}
-                source={
-                  typeof element.source === "string"
-                    ? element.source
-                    : element.source.name || ""
-                }
-                id={element.id}
-                category={element.category}
-                summary={element.summary}
-                newsProvider={
-                  typeof element.source === "string"
-                    ? element.source
-                    : element.source.name || "Unknown"
-                }
-              />
-            ))
+              if (isGroup && (!element.articles || element.articles.length === 0)) {
+                return null;
+              }
+
+              const urls = isGroup
+                ? element.articles!.map((article) => article.url).join(",")
+                : element.url;
+
+              const newsProviders = isGroup
+                ? element.articles!.map((article) => article.source).join(",")
+                : element.source;
+
+              return (
+                <EverythingCard
+                  key={index}
+                  title={
+                    isGroup ? element.representative_title || "" : element.title || ""
+                  }
+                  description={element.short_summary}
+                  summary={element.long_summary}
+                  imgUrl={
+                    isGroup
+                      ? element.articles![0].cover_image || ""
+                      : element.cover_image || ""
+                  }
+                  publishedDate={
+                    isGroup
+                      ? typeof element.articles![0].date_published === "string"
+                        ? element.articles![0].date_published
+                        : (element.articles![0].date_published as { $date: string }).$date
+                      : typeof element.date_published === "string"
+                      ? element.date_published
+                      : element.date_published.$date
+                  }
+                  newsProvider={newsProviders ?? null}
+                  source={urls ?? ""}
+                  id={element.id}
+                  category={element.category}
+                />
+              );
+            })
           ) : (
-            <p>No articles found for this category or criteria.</p>
-          )
-        ) : (
-          <Loader />
-        )}
+            <Loader />
+          )}
+        </div>
+        
       </div>
-    </>
+    </div>
   );
 };
 

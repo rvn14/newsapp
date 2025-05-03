@@ -67,14 +67,14 @@ const LatestNews: FC = () => {
   }, []);
 
   return (
-    <div className="bg-background p-16 w-full">
+    <div className="bg-background p-16">
       {error && <div className="text-red-500 mb-4">{error}</div>}
       <div className="w-full m-4">
-        <InfiniteCarousel data={dummyData} speed={0.5} />
+        {!isLoading && <InfiniteCarousel data={dummyData} speed={0.5} />}
       </div>
       <div className="font-semibold justify-center w-full items-center mb-8">
-        <div className="w-fit flex text-3xl font-bold font-inter"><span>Latest News</span></div>
-        <div className="border-1 border-primary w-full opacity-60 mb-8"></div>
+        {!isLoading && <div className="w-fit flex text-3xl font-bold font-inter"><span>Latest News</span></div>}
+        {!isLoading && <div className="border-1 border-primary w-full opacity-60 mb-8"></div>}
       </div>
       <div className="flex justify-center items-center mb-8 p-10">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-8 ">
