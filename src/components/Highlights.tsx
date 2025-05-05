@@ -20,7 +20,7 @@ interface HighlightsProps {
   dummy: NewsItem[];
 }
 
-const Highlights = ({ isLoading, dummy }: HighlightsProps) => {
+const Highlights = ({ dummy }: HighlightsProps) => {
     const dummyData = dummy || [];
     
     const politicNews = dummyData.find((item) => item?.category === "Politics")

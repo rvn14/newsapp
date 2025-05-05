@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import EverythingCard from "./EverythingCard";
 
 interface Article {
@@ -37,57 +37,66 @@ interface PaginatedNewsListProps {
 
 const PaginatedNewsList = ({ newsItems }: PaginatedNewsListProps) => {
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const itemsPerPage = 12; // 3x4 grid
-  const maxPageButtons = 15; // Maximum number of page buttons to show at once
+  const [screenWidth, setScreenWidth] = useState<number>(0);
+  const [isBrowser, setIsBrowser] = useState<boolean>(false);
+  const itemsPerPage = 12; 
+  const maxPageButtons = 15; 
 
-  // Pagination calculations
+  useEffect(() => {
+    setIsBrowser(true);
+    setScreenWidth(window.innerWidth);
+    
+    const handleResize = () => {
+      setScreenWidth(window.innerWidth);
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
   const totalPages = Math.ceil(newsItems.length / itemsPerPage);
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = newsItems.slice(indexOfFirstItem, indexOfLastItem);
 
-  // Function to determine which page buttons to show
   const getPageButtons = () => {
-    // If total pages is less than or equal to max buttons, show all pages
-    if (totalPages <= maxPageButtons) {
+    const effectiveMaxButtons = isBrowser && screenWidth < 640 ? 5 : maxPageButtons;
+    
+    if (totalPages <= effectiveMaxButtons) {
       return Array.from({ length: totalPages }, (_, i) => i + 1);
     }
     
-    // Calculate how many buttons to show on each side of current page
-    const sideButtons = Math.floor((maxPageButtons - 5) / 2); // 5 for first, last, current, and 2 ellipses
+    const sideButtons = Math.floor((effectiveMaxButtons - 5) / 2); 
     let startPage = Math.max(2, currentPage - sideButtons);
     let endPage = Math.min(totalPages - 1, currentPage + sideButtons);
     
-    // Adjust if we're near the start or end
     if (currentPage - sideButtons < 2) {
-      endPage = Math.min(totalPages - 1, 1 + maxPageButtons - 3); // -3 for first, last, and one ellipsis
+      endPage = Math.min(totalPages - 1, 1 + effectiveMaxButtons - 3); 
     }
     if (currentPage + sideButtons > totalPages - 1) {
-      startPage = Math.max(2, totalPages - maxPageButtons + 3); // +3 for first, last, and one ellipsis
+      startPage = Math.max(2, totalPages - effectiveMaxButtons + 3); 
     }
     
-    const pages: (number | string)[] = [1]; // Always include first page
+    const pages: (number | string)[] = [1]; 
     
-    // Add ellipsis after first page if needed
     if (startPage > 2) {
       pages.push('...');
     }
     
-    // Add pages around current page
     for (let i = startPage; i <= endPage; i++) {
-      if (i !== 1 && i !== totalPages) { // Avoid duplicates
+      if (i !== 1 && i !== totalPages) { 
         pages.push(i);
       }
     }
     
-    // Add ellipsis before last page if needed
     if (endPage < totalPages - 1) {
       pages.push('...');
     } else if (endPage === totalPages - 1) {
       pages.push(totalPages - 1);
     }
     
-    // Always include last page
     pages.push(totalPages);
     
     return pages;
@@ -103,7 +112,7 @@ const PaginatedNewsList = ({ newsItems }: PaginatedNewsListProps) => {
 
   return (
     <>
-      <div id="latest-news-grid" className="flex justify-center items-center mb-8 p-10">
+      <div id="latest-news-grid" className="flex justify-center items-center  p-4 md:p-10">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-8">
           {currentItems.map((element, index) => {
             const isGroup = Boolean(element.group_id);
@@ -167,14 +176,13 @@ const PaginatedNewsList = ({ newsItems }: PaginatedNewsListProps) => {
         </div>
       </div>
       
-      {/* Pagination Controls */}
       {totalPages > 1 && (
-        <div className="flex justify-center mt-8">
-          <nav className="flex flex-wrap items-center justify-center gap-2">
+        <div className="flex justify-center py-6 px-2 sm:p-4">
+          <nav className="flex flex-wrap items-center justify-center gap-1 sm:gap-2">
             <button 
               onClick={() => handlePageChange(currentPage - 1)} 
               disabled={currentPage === 1}
-              className="px-3 py-1 rounded bg-primary text-white dark:text-darkprimary cursor-pointer disabled:bg-gray-300 disabled:text-gray-400 disabled:cursor-not-allowed"
+              className="min-w-[80px] sm:min-w-[100px] px-3 py-2 sm:py-1 text-sm sm:text-base rounded bg-primary text-white dark:text-darkprimary cursor-pointer disabled:bg-gray-300 disabled:text-gray-400 disabled:cursor-not-allowed"
             >
               Previous
             </button>
@@ -184,19 +192,23 @@ const PaginatedNewsList = ({ newsItems }: PaginatedNewsListProps) => {
                 <button 
                   key={index}
                   onClick={() => handlePageChange(page)}
-                  className={`px-3 py-1 rounded ${currentPage === page ? 'bg-primary text-white cursor-pointer dark:text-darkprimary' : 'cursor-pointer bg-white text-primary dark:text-darkprimary border border-primary'}`}
+                  className={`w-9 h-9 sm:w-auto sm:h-auto flex items-center justify-center px-2 sm:px-3 py-2 sm:py-1 rounded text-sm sm:text-base ${
+                    currentPage === page 
+                      ? 'bg-primary text-white cursor-pointer dark:text-darkprimary' 
+                      : 'cursor-pointer bg-white text-primary dark:text-darkprimary border border-primary'
+                  }`}
                 >
                   {page}
                 </button>
               ) : (
-                <span key={index} className="px-2">...</span>
+                <span key={index} className="px-1 sm:px-2">...</span>
               )
             ))}
             
             <button 
               onClick={() => handlePageChange(currentPage + 1)} 
               disabled={currentPage === totalPages}
-              className="px-3 py-1 rounded bg-primary text-white cursor-pointer dark:text-darkprimary disabled:bg-gray-300 disabled:text-gray-400 disabled:cursor-not-allowed"
+              className="min-w-[80px] sm:min-w-[100px] px-3 py-2 sm:py-1 text-sm sm:text-base rounded bg-primary text-white cursor-pointer dark:text-darkprimary disabled:bg-gray-300 disabled:text-gray-400 disabled:cursor-not-allowed"
             >
               Next
             </button>
