@@ -15,9 +15,9 @@
     },
     "target": "ESNext",
     "module": "ESNext",
-    "jsx": "react-jsx",       // enable the new JSX transform
-    "allowJs": true,          // ← important: allow importing .js/.jsx
-    "checkJs": false,         // optional: skip type-checking in .js/.jsx
+    "jsx": "react-jsx", // enable the new JSX transform
+    "allowJs": true, // ← important: allow importing .js/.jsx
+    "checkJs": false, // optional: skip type-checking in .js/.jsx
     "strict": true,
     "moduleResolution": "node",
     "resolveJsonModule": true,
@@ -25,6 +25,6 @@
     "skipLibCheck": true
   },
   "include": [
-    "src/**/*"                // picks up .ts, .tsx, .js, .jsx
+    "src/**/*" // picks up .ts, .tsx, .js, .jsx
   ]
 }
