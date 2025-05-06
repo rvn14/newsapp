@@ -43,10 +43,8 @@ const EverythingCard: FC<EverythingCardProps> = ({
           className="object-cover w-full object-center max-h-48 min-h-48 hover:scale-103 transition-transform duration-300"
           src={imgUrl}
           alt={title}
-          onError={(e) => {
-            e.currentTarget.src =
-              "https://placehold.co/600x400?text=News+Image";
-          }}
+          
+          
         />
         <div className="absolute top-4 left-4">
           <span className="bg-red-600 text-white px-3 py-1 text-xs font-semibold rounded-full uppercase tracking-wider">
@@ -75,7 +73,7 @@ const EverythingCard: FC<EverythingCardProps> = ({
         {/* Read more link */}
         <div className="mt-auto pt-2">
           <Link
-            href={`/news?category=${category}&id=${id}`}
+            href={`/news/${category}/${id}`}
             className="text-red-600 dark:text-red-400 text-sm font-medium hover:underline flex items-center"
           >
             Read full story

@@ -17,15 +17,15 @@ interface NewsItem {
   category?: string;
 }
 
-// Already converted to async server component
+
 const HomePage = async () => {
   let data: NewsItem[] = [];
   let error: string | null = null;
   
   try {
-    // Server-side data fetching with native fetch API
+    
     const response = await fetch("http://localhost:8000/latest-news", {
-      next: { revalidate: 60 } // Optional: revalidate every 60 seconds
+      next: { revalidate: 60 } 
     });
     
     if (!response.ok) {
@@ -41,7 +41,6 @@ const HomePage = async () => {
   } catch (err) {
     console.error("Fetch error:", err);
     error = "Failed to fetch news. Please try again later.";
-    // Silently falling back to dummy data
   }
   
   const newsData = data.length > 0 ? data : dummy;

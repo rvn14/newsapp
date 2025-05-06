@@ -145,9 +145,9 @@ const PaginatedNewsList = ({ newsItems }: PaginatedNewsListProps) => {
                 imgUrl={
                   isGroup
                     ? element.articles![0].cover_image ||
-                      "https://placehold.co/600x400?text=News+Image"
+                      "/images/News_web.jpg"
                     : element.cover_image ||
-                      "https://placehold.co/600x400?text=News+Image"
+                      "/images/News_web.jpg"
                 }
                 publishedDate={
                   isGroup
