@@ -1,5 +1,5 @@
 // Search.tsx
-import React, { FC, useState, useEffect } from "react";
+import { FC, useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import EverythingCard from "./EverythingCard";
 import Loader from "./Loader";
@@ -48,9 +48,7 @@ const Search: FC = () => {
     setIsLoading(true);
     setError(null);
 
-    fetch(
-      `http://127.0.0.1:3000/search?query=${encodeURIComponent(query)}`
-    )
+    fetch(`http://127.0.0.1:3000/search?query=${encodeURIComponent(query)}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -104,7 +102,8 @@ const Search: FC = () => {
               const isGroup = Boolean(element.group_id);
 
               if (
-                isGroup && (!element.articles || element.articles.length === 0)
+                isGroup &&
+                (!element.articles || element.articles.length === 0)
               ) {
                 return null;
               }
@@ -121,9 +120,7 @@ const Search: FC = () => {
                 <EverythingCard
                   key={index}
                   title={
-                    isGroup
-                      ? element.representative_title! 
-                      : element.title
+                    isGroup ? element.representative_title! : element.title
                   }
                   description={element.short_summary}
                   summary={element.long_summary}
