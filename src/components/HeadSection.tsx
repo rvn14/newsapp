@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation'
 import { Menu, Search, X } from 'lucide-react'
 import { FaInstagram, FaFacebook, FaXTwitter, FaYoutube } from "react-icons/fa6";
 
-const HeadSection = () => {
+const HeadSection: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState<string>("");
     const [currentDate, setCurrentDate] = useState<string>("");
     const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);

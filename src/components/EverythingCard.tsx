@@ -73,7 +73,7 @@ const EverythingCard: FC<EverythingCardProps> = ({
         {/* Read more link */}
         <div className="mt-auto pt-2">
           <Link
-            href={`/news/${category}/${id}`}
+            href={`/${category}/${id}`}
             className="text-red-600 dark:text-red-400 text-sm font-medium hover:underline flex items-center"
           >
             Read full story
