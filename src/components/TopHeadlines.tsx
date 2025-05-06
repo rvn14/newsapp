@@ -43,11 +43,7 @@ const TopHeadlines: FC = () => {
     setIsLoading(true);
     setError(null);
 
-    fetch(
-      `http://localhost:8000/news?category=${encodeURIComponent(
-        category || "general"
-      )}`
-    )
+    fetch(`/api/news?category=${encodeURIComponent(category || "general")}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok");

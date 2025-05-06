@@ -46,7 +46,7 @@ const LatestNews: FC = () => {
 
     console.log("Fetching data..."); // 🟡 Step 1: Starting fetch
 
-    fetch("http://localhost:8000/latest-news")
+    fetch("/api/latest-news")
       .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok");

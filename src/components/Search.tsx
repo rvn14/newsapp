@@ -48,7 +48,7 @@ const Search: FC = () => {
     setIsLoading(true);
     setError(null);
 
-    fetch(`http://127.0.0.1:3000/search?query=${encodeURIComponent(query)}`)
+    fetch(`/api/search?query=${encodeURIComponent(query)}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok");

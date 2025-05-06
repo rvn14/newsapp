@@ -1,7 +1,6 @@
 // NewsDetail.tsx
-import React, { FC, useEffect, useState, SyntheticEvent } from "react";
+import { FC, useEffect, useState, SyntheticEvent } from "react";
 import { useLocation } from "react-router-dom";
-import { dummy } from "../assets/dummyData";
 
 interface Article {
   id: string;
@@ -72,7 +71,7 @@ const NewsDetail: FC = () => {
     (async () => {
       try {
         const res = await fetch(
-          `http://localhost:8000/news?category=${encodeURIComponent(
+          `/api/news?category=${encodeURIComponent(
             category
           )}&id=${encodeURIComponent(id)}`
         );
