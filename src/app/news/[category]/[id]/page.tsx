@@ -1,4 +1,4 @@
-import React, { SyntheticEvent } from 'react'
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { dummy } from "@/utils/dummyData";
 import Image from 'next/image';
 import { Globe } from 'lucide-react';

@@ -1,5 +1,4 @@
 import EverythingCard from "@/components/EverythingCard";
-import Loader from "@/components/Loader";
 import InfiniteCarousel from "@/components/NewsSlider";
 import { dummy } from "@/utils/dummyData";
 
