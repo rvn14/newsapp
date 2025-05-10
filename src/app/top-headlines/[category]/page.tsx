@@ -45,7 +45,7 @@ export default async function TopHeadlines({ params }: PageProps) {
   try {
     const response = await fetch(
       `http://localhost:8000/api/news?category=${encodeURIComponent(
-        category || "general"
+        category.toLowerCase() || "general"
       )}`,
       { cache: "no-store" }
     );
