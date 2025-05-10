@@ -47,7 +47,7 @@ const HomePage = async () => {
 
   return (
     <div className="bg-background p-2 md:p-16">
-      {error && <div className="text-red-500 mb-4">{error}</div>}
+      
       <div className="w-full">
         <InfiniteCarousel data={newsData} speed={0.5} />
       </div>

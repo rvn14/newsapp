@@ -81,7 +81,9 @@ const getSourceIcon = (url: string) => {
 
 const page = async ({ params }: PageProps) => {
 
-  const { category, id } = params;
+  const id = params.id;
+  const category = params.category.charAt(0).toUpperCase() + params.category.slice(1);
+  
   let data: NewsItem[] = [];
   let error: string | null = null;
 

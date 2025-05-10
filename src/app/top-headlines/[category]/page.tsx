@@ -37,7 +37,7 @@ interface PageProps {
 }
 
 export default async function TopHeadlines({ params }: PageProps) {
-  const category = params.category;
+  const category = params.category.charAt(0).toUpperCase() + params.category.slice(1);
   
   let data: TopHeadlineItem[] = [];
   let error = null;
@@ -45,7 +45,7 @@ export default async function TopHeadlines({ params }: PageProps) {
   try {
     const response = await fetch(
       `http://localhost:8000/news?category=${encodeURIComponent(
-        category || "general"
+        category.toLowerCase() || "general"
       )}`,
       { cache: 'no-store' }
     );
