@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { dummy } from "@/utils/dummyData";
-import Image from 'next/image';
-import { Globe } from 'lucide-react';
+// import { dummy } from "@/utils/dummyData";
+import Image from "next/image";
+import { Globe } from "lucide-react";
 
 interface Article {
   url: string;
@@ -38,7 +38,6 @@ interface PageProps {
   };
 }
 
-
 const shortenUrl = (url: string): string => {
   try {
     const parsed = new URL(url);
@@ -69,26 +68,54 @@ const formatDate = (dateString: string): string => {
 // Helper function to map news source to appropriate icon
 const getSourceIcon = (url: string) => {
   const domain = url.toLowerCase();
-  
-  if (domain.includes('newsfirst')) return <Image width={200} height={200} src="/images/newsfirst.jpeg" alt="News First" className="h-6 w-6" />;
-  if (domain.includes('adaderana')) return <Image width={200} height={200} src="/images/derana.png" alt="News First" className="h-6 w-6" />;
-  if (domain.includes('hirunews')) return <Image width={200} height={200} src="/images/hiru.jpg" alt="News First" className="h-6 w-6" />;
-  
+
+  if (domain.includes("newsfirst"))
+    return (
+      <Image
+        width={200}
+        height={200}
+        src="/images/newsfirst.jpeg"
+        alt="News First"
+        className="h-6 w-6"
+      />
+    );
+  if (domain.includes("adaderana"))
+    return (
+      <Image
+        width={200}
+        height={200}
+        src="/images/derana.png"
+        alt="News First"
+        className="h-6 w-6"
+      />
+    );
+  if (domain.includes("hirunews"))
+    return (
+      <Image
+        width={200}
+        height={200}
+        src="/images/hiru.jpg"
+        alt="News First"
+        className="h-6 w-6"
+      />
+    );
+
   // Default icon for other sources
   return <Globe className="h-6 w-6" />;
 };
 
-
 const page = async ({ params }: PageProps) => {
-
   const { category, id } = params;
   let data: NewsItem[] = [];
   let error: string | null = null;
 
   try {
-    const response = await fetch(`http://localhost:8000/news/${id}`, {
-      next: { revalidate: 60 } 
-    });
+    const response = await fetch(
+      `http://localhost:8000/api/news?category=${category}&id=${id}`,
+      {
+        next: { revalidate: 60 },
+      }
+    );
 
     if (!response.ok) {
       throw new Error(`API responded with status: ${response.status}`);
@@ -104,17 +131,18 @@ const page = async ({ params }: PageProps) => {
     console.error("Fetch error:", err);
     error = "Failed to fetch news. Please try again later.";
   }
-  const newsData = data.length > 0 ? data : dummy.filter((item) => item.category === category || item.group_id === category);
-  
+  // const newsData = data ;
+  const news = data as NewsItem;
   // Process the news data
-  const news = newsData.find((item)=> item.id === id) || {} as NewsItem;
+  // const news = newsData.find((item) => item.id === id) || ({} as NewsItem);
   const isGroup = !!news.articles && news.articles.length > 0;
   const mainArticle = isGroup && news.articles ? news.articles[0] : news;
-  
+
   // Extract unique sources if it's a group
-  const uniqueSources = isGroup && news.articles 
-    ? [...new Set(news.articles.map(article => article.url))]
-    : [];
+  const uniqueSources =
+    isGroup && news.articles
+      ? [...new Set(news.articles.map((article) => article.url))]
+      : [];
 
   return (
     <div className="min-h-screen w-full flex flex-col items-center bg-background p-4 md:p-6">
@@ -181,7 +209,6 @@ const page = async ({ params }: PageProps) => {
               <div className="p-2 rounded-full bg-secondary hover:bg-secondary/80 transition-colors">
                 {getSourceIcon(news.source)}
               </div>
-              
             </a>
           ) : uniqueSources.length > 0 ? (
             <div className="flex flex-wrap gap-4">
@@ -197,7 +224,6 @@ const page = async ({ params }: PageProps) => {
                   <div className="p-3 rounded-full bg-secondary hover:bg-secondary/80 transition-colors mb-2">
                     {getSourceIcon(source)}
                   </div>
-                  
                 </a>
               ))}
             </div>
@@ -207,7 +233,7 @@ const page = async ({ params }: PageProps) => {
         </section>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default page
+export default page;
