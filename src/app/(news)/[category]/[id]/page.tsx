@@ -110,12 +110,9 @@ const page = async ({ params }: PageProps) => {
   let error: string | null = null;
 
   try {
-    const response = await fetch(
-      `http://localhost:8000/api/news?category=${category}&id=${id}`,
-      {
-        next: { revalidate: 60 },
-      }
-    );
+    const response = await fetch(`/api/news?category=${category}&id=${id}`, {
+      next: { revalidate: 60 },
+    });
 
     if (!response.ok) {
       throw new Error(`API responded with status: ${response.status}`);

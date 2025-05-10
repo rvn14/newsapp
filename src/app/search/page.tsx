@@ -93,13 +93,15 @@ type Props = {
 };
 
 const page: FC<Props> = async ({ searchParams }) => {
-  const query = searchParams.query ?? "";
+  // Await searchParams to ensure it is resolved before using it
+  const query = (await searchParams)?.query ?? "";
+
   let data: NewsItem[] = [];
   let error: string | null = null;
 
   try {
     const response = await fetch(
-      `http://localhost:8000/api/search?query=${encodeURIComponent(query)}`,
+      `/api/search?query=${encodeURIComponent(query)}`,
       {
         next: { revalidate: 60 },
       }
@@ -186,8 +188,9 @@ const page: FC<Props> = async ({ searchParams }) => {
             <Image
               className="w-full max-w-md h-auto object-cover rounded-lg shadow-lg"
               src={
-                (isGroup ? news.articles![0]?.cover_image : news.cover_image) ||
-                "/News_web.jpg"
+                isGroup
+                  ? news.articles![0]?.cover_image
+                  : news.cover_image || "/News_web.jpg"
               }
               alt={mainArticle?.title ?? "News cover image"}
               width={600}
