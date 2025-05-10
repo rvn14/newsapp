@@ -1,7 +1,7 @@
 import { Globe } from "lucide-react";
 import React, { FC } from "react";
 import Image from "next/image";
-import { dummy } from "@/utils/dummyData";
+// import { dummy } from "@/utils/dummyData";
 
 interface Article {
   url: string;
