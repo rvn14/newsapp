@@ -62,8 +62,8 @@ const HeadSection: React.FC = () => {
             <div className='hidden md:flex items-center flex-grow'>
                 <ul className='flex items-center'>
                     <li className='nav-link'><Link href="/">Home</Link></li>
-                    <li className='nav-link'><Link href={`/top-headlines/Business`}>Business</Link></li>
-                    <li className='nav-link'><Link href={`/top-headlines/Entertainment`}>Entertainment</Link></li>
+                    <li className='nav-link'><Link href={`/top-headlines/business`}>Business</Link></li>
+                    <li className='nav-link'><Link href={`/top-headlines/entertainment`}>Entertainment</Link></li>
                     <li className='bg-transparent'> <SelectCategory/> </li>
                 </ul>
             </div>
