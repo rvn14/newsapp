@@ -1,6 +1,6 @@
 import EverythingCard from "@/components/EverythingCard";
 import InfiniteCarousel from "@/components/NewsSlider";
-// import { dummy } from "@/utils/dummyData";
+import { dummy } from "@/utils/dummyData";
 
 interface Article {
   url: string;
@@ -38,6 +38,8 @@ interface PageProps {
 
 export default async function TopHeadlines({ params }: PageProps) {
   const category = params.category;
+  const formattedCategory =
+    category.charAt(0).toUpperCase() + category.slice(1).toLowerCase();
 
   let data: TopHeadlineItem[] = [];
   let error = null;
@@ -45,7 +47,7 @@ export default async function TopHeadlines({ params }: PageProps) {
   try {
     const response = await fetch(
       `http://localhost:8000/api/news?category=${encodeURIComponent(
-        category.toLowerCase() || "general"
+        formattedCategory || "General"
       )}`,
       { cache: "no-store" }
     );
@@ -60,15 +62,19 @@ export default async function TopHeadlines({ params }: PageProps) {
       data = json.data;
     } else {
       error = json.message || "An error occurred";
-      data = dummy.filter(
-        (item) => item.category === category || item.group_id === category
-      );
+      // Uncomment and define dummy if you want fallback data
+      // data = dummy.filter(
+      //   (item) => item.category === formattedCategory || item.group_id === formattedCategory
+      // );
     }
   } catch (err) {
     console.error("Fetch error:", err);
     error = "Failed to fetch news. Please try again later.";
+    // Uncomment and define dummy if you want fallback data
     data = dummy.filter(
-      (item) => item.category === category || item.group_id === category
+      (item) =>
+        item.category === formattedCategory ||
+        item.group_id === formattedCategory
     );
   }
 
@@ -80,7 +86,7 @@ export default async function TopHeadlines({ params }: PageProps) {
       </div>
       <div className="font-semibold justify-center w-full items-center mb-8">
         <div className="w-fit flex text-3xl font-bold font-inter">
-          <span>{category} News</span>
+          <span>{formattedCategory} News</span>
         </div>
         <div className="border-1 border-primary w-full opacity-60 mb-8"></div>
       </div>
