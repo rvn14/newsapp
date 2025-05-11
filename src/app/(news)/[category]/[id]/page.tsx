@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-// import { dummy } from "@/utils/dummyData";
+import { dummy } from "@/utils/dummyData";
 import Image from "next/image";
 import { Globe } from "lucide-react";
 
@@ -105,7 +105,7 @@ const getSourceIcon = (url: string) => {
 };
 
 const page = async ({ params }: PageProps) => {
-  const { category, id } = params;
+  const { category, id } = await params;
   let data: NewsItem[] = [];
   let error: string | null = null;
 

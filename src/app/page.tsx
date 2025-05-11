@@ -38,6 +38,7 @@ const HomePage = async () => {
     }
   } catch (err) {
     console.error("Fetch error:", err);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     error = "Failed to fetch news. Please try again later.";
   }
 
@@ -45,7 +46,6 @@ const HomePage = async () => {
 
   return (
     <div className="bg-background p-2 md:p-16">
-      
       <div className="w-full">
         <InfiniteCarousel data={newsData} speed={0.5} />
       </div>
