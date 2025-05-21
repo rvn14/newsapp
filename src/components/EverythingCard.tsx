@@ -35,7 +35,7 @@ const EverythingCard: FC<EverythingCardProps> = ({
 
   return (
     <div className="shadow-lg rounded-lg overflow-hidden bg-white dark:bg-darkprimary w-full hover:shadow-xl transition-shadow duration-300 border border-gray-100 dark:border-gray-800">
-        <Link href={`/${category}/${id}`} className="w-full">
+        <Link href={`/${category.toLowerCase()}/${id}`} className="w-full">
         {/* Image section with category badge */}
         <div className="relative overflow-hidden ">
           <Image
@@ -71,15 +71,14 @@ const EverythingCard: FC<EverythingCardProps> = ({
             {description}
           </p>
 
-          {/* Read more link */}
+          {/* Read more link - replaced Link with span to avoid nested a tags */}
           <div className="mt-auto pt-2">
-            <Link
-              href={`/${category}/${id}`}
-              className="text-red-600 dark:text-red-400 text-sm font-medium hover:underline flex items-center"
+            <span
+              className="text-red-600 dark:text-red-400 text-sm font-medium hover:underline flex items-center cursor-pointer"
             >
               Read full story
               <ArrowRightIcon size={14} />
-            </Link>
+            </span>
           </div>
         </div>
     </Link>

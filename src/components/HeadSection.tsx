@@ -41,32 +41,50 @@ const HeadSection: React.FC = () => {
     };
 
   return (
-    <div className='text-white w-full'>
+    <div className='relative text-white w-full'>
         <div className="flex justify-between items-center bg-darkprimary p-6 py-2">
+            
             <div className='text-sm font-light'>{currentDate}</div>
-            <div className='flex gap-3'> <FaInstagram className='cursor-pointer'/><FaFacebook className='cursor-pointer' /><FaXTwitter className='cursor-pointer' /><FaYoutube className='cursor-pointer' />  </div>
+            <div className='flex items-center gap-4'>
+               <div className='hidden md:flex items-center gap-4'>
+                <div>
+                    <form onSubmit={handleSearch} className="flex items-center">
+                        <div className="search-container flex">
+                            <input
+                            type="text"
+                            value={searchTerm}
+                            onChange={handleInputChange}
+                            placeholder="Search news..."
+                            className="p-2 px-6 focus:outline-none focus:ring-0 bg-white/3 rounded-l-md"
+                            />
+                            <button
+                            type="submit"
+                            className="bg-white/3 text-white p-2 px-6 hover:bg-white/5 transition-colors duration-100 cursor-pointer rounded-r-md"
+                            >
+                            <Search className='text-white'/>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                
+            </div> 
+            <ModeToggle/>
+            </div>
         </div>
-        <div className='bg-red-900 flex justify-center items-center p-4 w-full h-48' style={{backgroundImage: "url('/images/cover2.jpg')", backgroundSize: "cover", backgroundPosition: "center"}}>
-            <div className='logo font-mono font-semibold text-6xl md:text-6xl text-center'>NEWS SCRAPER</div>
+        
+        <div className='bg-darkprimary px-4 flex items-center justify-between relative shadow-md py-4 sm:py-6 md:py-8 min-h-[4rem] sm:min-h-[6rem] md:min-h-[7rem] w-full' style={{backgroundImage: "url('/images/cover2.jpg')", backgroundSize: "cover", backgroundPosition: "center"}}>
 
-        </div>
-        <div className='bg-darkprimary px-4 flex items-center justify-between relative'>
+        <div className='logo font-mono font-semibold text-6xl md:text-6xl '>Ceylon Brief</div>
             {/* Mobile Menu Toggle */}
-            <div className='md:hidden self-center flex items-center'>
+            <div className='md:hidden ml-auto self-center flex items-center'>
                 <button onClick={toggleMobileMenu} className='text-white'>
                     {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
                 </button>
             </div>
 
             {/* Desktop Navigation */}
-            <div className='hidden md:flex items-center flex-grow'>
-                <ul className='flex items-center'>
-                    <li className='nav-link'><Link href="/">Home</Link></li>
-                    <li className='nav-link'><Link href={`/top-headlines/business`}>Business</Link></li>
-                    <li className='nav-link'><Link href={`/top-headlines/entertainment`}>Entertainment</Link></li>
-                    <li className='bg-transparent'> <SelectCategory/> </li>
-                </ul>
-            </div>
+
+            
 
             {/* Mobile Navigation - Positioned Absolutely */}
             {mobileMenuOpen && (
@@ -100,34 +118,23 @@ const HeadSection: React.FC = () => {
                 </div>
             )}
 
-            {/* Desktop Search and Mode Toggle */}
-            <div className='hidden md:flex items-center gap-4'>
-                <div>
-                    <form onSubmit={handleSearch} className="flex items-center">
-                        <div className="search-container flex">
-                            <input
-                            type="text"
-                            value={searchTerm}
-                            onChange={handleInputChange}
-                            placeholder="Search news..."
-                            className="p-2 px-6 focus:outline-none focus:ring-0 bg-white/3 rounded-l-md"
-                            />
-                            <button
-                            type="submit"
-                            className="bg-white/3 text-white p-2 px-6 hover:bg-white/5 transition-colors duration-100 cursor-pointer rounded-r-md"
-                            >
-                            <Search className='text-white'/>
-                            </button>
-                        </div>
-                    </form>
-                </div>
-                <ModeToggle/>
-            </div>
+            
             
             {/* Mobile Mode Toggle - Outside the dropdown */}
             <div className='md:hidden'>
-                <ModeToggle/>
             </div>
+        </div>
+        <div className='sticky top-0 bg-darkprimary hidden md:flex justify-center items-center  gap-4 text-sm shadow-xs'>
+            <Link className='nav-link p-2' href={"/"}>Home</Link>
+            <Link className='nav-link p-2' href={"/top-headlines/general"}>General</Link>
+            <Link className='nav-link p-2' href={"/top-headlines/business"}>Business</Link>
+            <Link className='nav-link p-2' href={"/top-headlines/entertainment"}>Entertainment</Link>
+            <Link className='nav-link p-2' href={"/top-headlines/health"}>Health</Link>
+            <Link className='nav-link p-2' href={"/top-headlines/science"}>Science</Link>
+            <Link className='nav-link p-2' href={"/top-headlines/sports"}>Sports</Link>
+            <Link className='nav-link p-2' href={"/top-headlines/technology"}>Technology</Link>
+            <Link className='nav-link p-2' href={"/top-headlines/politics"}>Politics</Link>
+            <Link className='nav-link p-2 bg-white/8' href={"/featured-news"}>Featured Articles</Link>
         </div>
     </div>
   )

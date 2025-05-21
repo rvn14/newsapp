@@ -1,14 +1,17 @@
-
 import Image from 'next/image'
 
 // Define a type for news items
 interface NewsItem {
+  id: string | number;
   category?: string;
   title?: string;
   representative_title?: string;
   cover_image?: string;
   date_published?: string | { $date: string } | null;
   group_id?: string;
+  isLive?: boolean;
+  short_summary?: string;
+  source?: string;
   articles?: Array<{
     cover_image?: string;
     date_published?: string | { $date: string } | null;
@@ -29,6 +32,9 @@ const Highlights = ({ dummy }: HighlightsProps) => {
     const scienceNews = dummyData.find((item) => item?.category === "Science")
     const healthNews = dummyData.find((item) => item?.category === "Health")
     const technologyNews = dummyData.find((item) => item?.category === "Technology")
+
+    console.log(politicNews);
+    
 
     const otherNews = [
       businessNews,
@@ -57,12 +63,19 @@ const Highlights = ({ dummy }: HighlightsProps) => {
           return "Invalid date";
         }
         
-        // Return formatted date: Jan 1, 2023
-        return dateObj.toLocaleDateString('en-US', { 
-          month: 'short', 
-          day: 'numeric', 
-          year: 'numeric'
-        });
+        // Get time difference in hours
+        const hoursDiff = Math.floor((Date.now() - dateObj.getTime()) / (1000 * 60 * 60));
+        
+        if (hoursDiff < 24) {
+          return `${hoursDiff} hrs ago`;
+        } else {
+          // Return formatted date: Jan 1, 2023
+          return dateObj.toLocaleDateString('en-US', { 
+            month: 'short', 
+            day: 'numeric', 
+            year: 'numeric'
+          });
+        }
       } catch (error) {
         console.error("Error formatting date:", error);
         return "Invalid date";
@@ -70,84 +83,157 @@ const Highlights = ({ dummy }: HighlightsProps) => {
     }
     
     // Get the appropriate date value based on structure
-    const getPublishedDate = (): string => {
-      if (politicNews?.group_id && politicNews?.articles?.[0]?.date_published) {
-        return formatDate(politicNews.articles[0].date_published);
-      } else if (politicNews?.date_published) {
-        return formatDate(politicNews.date_published);
+    const getPublishedDate = (news?: NewsItem): string => {
+      if (!news) return "Unknown date";
+      
+      if (news?.group_id && news?.articles?.[0]?.date_published) {
+        return formatDate(news.articles[0].date_published);
+      } else if (news?.date_published) {
+        return formatDate(news.date_published);
       }
       return "Unknown date";
     }
 
+    // Live indicator component
+    const LiveIndicator = () => (
+      <div className="flex items-center gap-1">
+        <div className='border-2 border-red-600 p-1 rounded-full'><div className="w-3 h-3 rounded-full bg-red-600 animate-pulse"></div></div>
+        <span className="text-red-600 font-bold">Breaking</span>
+      </div>
+    );
+
     return (
-    <div className='flex flex-col md:flex-row items-start justify-center gap-16 max-w-7xl mx-auto'>
-      {/* Main featured news */}
-      <div className="mainNews relative w-full md:w-[600px] h-[550px] overflow-hidden rounded-sm">
-        <div className="relative w-full h-full">
-          <Image 
-            src={
-              politicNews?.group_id
+      <div className="max-w-7xl mx-auto px-4">
+        {/* Main grid container */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+          {/* Left column - Breaking news */}
+          <div className="md:col-span-3">
+            <div className="pb-4">
+              
+              <div className="relative w-full h-[200px] overflow-clip">
+                <Image 
+                  src={politicNews?.group_id
                 ? politicNews?.articles?.[0]?.cover_image ||
                   "https://placehold.co/600x400?text=News+Image"
                 : politicNews?.cover_image ||
                   "https://placehold.co/600x400?text=News+Image"
-            }
-            alt={politicNews?.title || "Political news"}
-            fill
-            sizes="(max-width: 768px) 100vw, 600px"
-            priority
-            className="object-center object-cover"
-          />
-        </div>
-        <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent">
-          <div className="flex gap-2 mb-2">
-            <span className="bg-red-600 text-white text-xs px-2 py-1 rounded">{politicNews?.category}</span>
-          </div>
-          <h2 className="text-3xl font-bold text-white mb-2">{
-                    politicNews?.group_id
-                      ? politicNews.representative_title || ""
-                      : politicNews?.title || ""
-                  }</h2>
-          <div className="flex items-center text-gray-300 text-sm">
-            <span>{getPublishedDate()}</span>
-          </div>
-        </div>
-      </div>
-      
-      {/* Side news items */}
-      <div className='flex flex-col justify-between h-[550px] w-full md:w-1/3'>
-        {otherNews.map((news, index) => (
-          <div key={`${news?.category}-${index}`} className="flex items-center gap-4 h-24 group cursor-pointer bg-muted rounded-sm pr-4 overflow-auto">
-            <div className='relative min-w-36 max-w-36 h-full overflow-hidden bg-red-600'>
-              <span className="absolute top-1 left-1 z-10 bg-red-600 text-white text-xs px-2 py-1 rounded">{news?.category}</span>
-              <div className="relative w-full h-full">
-                <Image 
-                  src={
-                    news?.group_id
-                      ? news?.articles?.[0]?.cover_image ||
-                        "https://placehold.co/600x400?text=News+Image"
-                      : news?.cover_image ||
-                        "https://placehold.co/600x400?text=News+Image"
-                  }
-                  alt={news?.title || `${news?.category} news`}
+}
+                  alt="Gaza conflict"
                   fill
-                  sizes="144px"
-                  className="object-center object-cover"
+                  sizes="(max-width: 768px) 100vw, 400px"
+                  className="object-center object-cover hover:scale-105 transition-transform duration-300"
                 />
               </div>
+              <div className='mt-2'><LiveIndicator/></div>
+              <h2 className="text-xl font-bold mb-2">
+                  <a href={`/${politicNews?.category?.toLowerCase()}/${politicNews?.id}`} className="hover:underline">
+                    {politicNews?.group_id
+                      ? politicNews.representative_title || "politicNews Title"
+                      : politicNews?.title || "News Title"}
+                  </a>
+                </h2>
+              <p className="text-sm text-muted-foreground mb-3">
+                {politicNews?.group_id
+                  ? politicNews?.short_summary || ""
+                  : politicNews?.short_summary || ""}
+              </p>
             </div>
-            <div className="flex items-center justify-center">
-              <h3 className="font-medium text-sm ">{
-                      news?.group_id
-                        ? news.representative_title || ""
-                        : news?.title || ""
-                    }</h3>
+          <div className="pb-4">
+              
+              <div className="relative w-full h-[200px] overflow-clip">
+                <Image 
+                  src={businessNews?.group_id
+                ? businessNews?.articles?.[0]?.cover_image ||
+                  "https://placehold.co/600x400?text=News+Image"
+                : businessNews?.cover_image ||
+                  "https://placehold.co/600x400?text=News+Image"
+                  }
+                  alt="Gaza conflict"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 400px"
+                  className="object-center object-cover hover:scale-105 transition-transform duration-300"
+                />
+              </div>
+              <div className='mt-2'><LiveIndicator/></div>
+              <h2 className="font-serif font-bold text-xl mb-2 line-clamp-2 text-gray-800 dark:text-white">
+            {businessNews?.group_id
+                    ? businessNews?.representative_title || ""
+                    : businessNews?.title || ""}
+          </h2>
+              <p className="text-sm text-muted-foreground mb-3">
+                {businessNews?.group_id
+                  ? businessNews?.short_summary || ""
+                  : businessNews?.short_summary || ""}
+              </p>
             </div>
           </div>
-        ))}
+          
+          
+          {/* Middle column - Ukraine talks - now wider */}
+          <div className="md:col-span-6 md:px-2 h-fit border-b-2">
+            <div className="pb-4"> 
+              <div className="relative w-full h-[300px] mb-3 overflow-clip">
+                <Image 
+                  src={businessNews?.group_id
+                ? businessNews?.articles?.[0]?.cover_image ||
+                  "https://placehold.co/600x400?text=News+Image"
+                : businessNews?.cover_image ||
+                  "https://placehold.co/600x400?text=News+Image"
+                  }
+                  alt="Ukraine-Russia talks"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 600px"
+                  className="object-center object-cover hover:scale-105 transition-transform duration-300"
+                />
+              </div>
+              <h2 className="font-serif font-bold text-xl mb-2 line-clamp-2 text-gray-800 dark:text-white">
+            {businessNews?.group_id
+                    ? businessNews?.representative_title || ""
+                    : businessNews?.title || ""}
+          </h2>
+              <p className="text-sm text-muted-foreground mb-3">
+                {businessNews?.group_id
+                  ? businessNews?.short_summary || ""
+                  : businessNews?.short_summary || ""}
+              </p>
+            </div>
+            
+            {/* Hospital news with video icon */}
+            
+          </div>
+          
+          
+          <div className="md:col-span-3 space-y-4 ">
+            {otherNews.map((news, index) => (
+              <div key={`${news?.category}-${index}`} className="border-b pb-4 last:border-b-0">
+                <h3 className="text-lg font-bold mb-2">
+                  <a href={`/${news?.category?.toLowerCase()}/${news?.id}`} className="hover:underline">
+                    {news?.group_id
+                      ? news.representative_title || "News Title"
+                      : news?.title || "News Title"}
+                  </a>
+                </h3>
+                <p className="text-sm text-muted-foreground mb-2">
+                  {news?.short_summary || "No summary available for this news item."}
+                </p>
+                <div className="flex items-center text-xs text-gray-500 gap-2">
+                  <span>{getPublishedDate(news)}</span>
+                  <span className="px-1">|</span>
+                  <span className="font-semibold">{news?.category || "General"}</span>
+                </div>
+              </div>
+            ))}
+            
+            {/* If there are fewer than 4 news items, add placeholder */}
+            {otherNews.length < 4 && (
+              <div className="pb-4 ">
+                
+              </div>
+            )}
+          </div>
+        </div>
       </div>
-    </div>
-  )
+    );
 }
 
 export default Highlights

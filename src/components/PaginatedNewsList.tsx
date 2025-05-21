@@ -2,6 +2,15 @@
 
 import { useState, useEffect } from "react";
 import EverythingCard from "./EverythingCard";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 interface Article {
   url: string;
@@ -177,42 +186,47 @@ const PaginatedNewsList = ({ newsItems }: PaginatedNewsListProps) => {
       </div>
       
       {totalPages > 1 && (
-        <div className="flex justify-center py-6 px-2 sm:p-4">
-          <nav className="flex flex-wrap items-center justify-center gap-1 sm:gap-2">
-            <button 
-              onClick={() => handlePageChange(currentPage - 1)} 
-              disabled={currentPage === 1}
-              className="min-w-[80px] sm:min-w-[100px] px-3 py-2 sm:py-1 text-sm sm:text-base rounded bg-primary text-white dark:text-darkprimary cursor-pointer disabled:bg-gray-300 disabled:text-gray-400 disabled:cursor-not-allowed"
-            >
-              Previous
-            </button>
-            
-            {getPageButtons().map((page, index) => (
-              typeof page === 'number' ? (
-                <button 
-                  key={index}
-                  onClick={() => handlePageChange(page)}
-                  className={`w-9 h-9 sm:w-auto sm:h-auto flex items-center justify-center px-2 sm:px-3 py-2 sm:py-1 rounded text-sm sm:text-base ${
-                    currentPage === page 
-                      ? 'bg-primary text-white cursor-pointer dark:text-darkprimary' 
-                      : 'cursor-pointer bg-white text-primary dark:text-darkprimary border border-primary'
-                  }`}
-                >
-                  {page}
-                </button>
-              ) : (
-                <span key={index} className="px-1 sm:px-2">...</span>
-              )
-            ))}
-            
-            <button 
-              onClick={() => handlePageChange(currentPage + 1)} 
-              disabled={currentPage === totalPages}
-              className="min-w-[80px] sm:min-w-[100px] px-3 py-2 sm:py-1 text-sm sm:text-base rounded bg-primary text-white cursor-pointer dark:text-darkprimary disabled:bg-gray-300 disabled:text-gray-400 disabled:cursor-not-allowed"
-            >
-              Next
-            </button>
-          </nav>
+        <div className="flex justify-center py-6 px-2">
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                  href="#"
+                />
+              </PaginationItem>
+              
+              {getPageButtons().map((page, index) => (
+                typeof page === 'number' ? (
+                  <PaginationItem key={index}>
+                    <PaginationLink
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handlePageChange(page);
+                      }}
+                      isActive={currentPage === page}
+                    >
+                      {page}
+                    </PaginationLink>
+                  </PaginationItem>
+                ) : (
+                  <PaginationItem key={index}>
+                    <PaginationEllipsis />
+                  </PaginationItem>
+                )
+              ))}
+              
+              <PaginationItem>
+                <PaginationNext
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                  href="#"
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
         </div>
       )}
     </>

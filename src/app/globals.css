@@ -5,6 +5,7 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  --font-nirmala: "Nirmala", sans-serif;
   --font-inter: 'Inter', sans-serif;
   --color-darkprimary: #1c1c1c;
   --color-background: var(--background);
@@ -44,6 +45,15 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+}
+
+@font-face {
+  font-family: 'Nirmala';
+  src: url(/fonts/nirmala.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Yaldewi';
+  src: url(/fonts/yaldevi.ttf) format('truetype');
 }
 
 :root {
@@ -138,6 +148,7 @@ body{
 }
 
 body {
+
   background: var(--background);
   background-size: cover;
   background-position: center;
