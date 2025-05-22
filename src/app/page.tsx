@@ -1,5 +1,4 @@
 import { dummy } from "@/utils/dummyData";
-import InfiniteCarousel from "@/components/NewsSlider";
 import Highlights from "@/components/Highlights";
 import PaginatedNewsList from "@/components/PaginatedNewsList"; 
 
@@ -24,7 +23,7 @@ const HomePage = async () => {
   
   try {
     
-    const response = await fetch("http://localhost:8000/latest-news", {
+    const response = await fetch("http://127.0.0.1:8000/api/latest-news", {
       next: { revalidate: 60 } 
     });
     
@@ -35,6 +34,8 @@ const HomePage = async () => {
     const result = await response.json();
     if (result.success) {
       data = result.data;
+      console.log(data);
+      
     } else {
       error = result.message || "An error occurred";
     }
@@ -48,9 +49,6 @@ const HomePage = async () => {
   return (
     <div className="bg-background p-2 md:p-16">
       
-      <div className="w-full">
-        <InfiniteCarousel data={newsData} speed={0.5} />
-      </div>
       <div className="pt-6 pb-16 flex justify-center items-center">
         <Highlights dummy={newsData} />
       </div>

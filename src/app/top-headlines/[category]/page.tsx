@@ -44,8 +44,8 @@ export default async function TopHeadlines({ params }: PageProps) {
   
   try {
     const response = await fetch(
-      `http://localhost:8000/news?category=${encodeURIComponent(
-        category.toLowerCase() || "general"
+      `http://127.0.0.1:8000/api/news?category=${encodeURIComponent(
+        category || "general"
       )}`,
       { cache: 'no-store' }
     );
@@ -75,9 +75,6 @@ export default async function TopHeadlines({ params }: PageProps) {
   return (
     <div className="bg-background p-2 md:p-16">
       {error && <div className="text-red-500 mb-4">{error}</div>}
-      <div className="w-full">
-        <InfiniteCarousel data={data} speed={0.5} />
-      </div>
       <div className="font-semibold justify-center w-full items-center mb-8">
         <div className="w-fit flex text-3xl font-bold font-inter">
           <span>{category} News</span>
