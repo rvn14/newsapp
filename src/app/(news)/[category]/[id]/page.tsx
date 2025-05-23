@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import Image from 'next/image';
-import { Globe } from 'lucide-react';
+import Image from "next/image";
+import { Globe } from "lucide-react";
 
 interface Article {
   url: string;
@@ -37,7 +37,6 @@ interface PageProps {
   };
 }
 
-
 const shortenUrl = (url: string): string => {
   try {
     const parsed = new URL(url);
@@ -48,30 +47,31 @@ const shortenUrl = (url: string): string => {
   }
 };
 
-const formatDate = (dateString: string | { $date: string | number } | undefined): string => {
+const formatDate = (
+  dateString: string | { $date: string | number } | undefined
+): string => {
   try {
     if (!dateString) return "Date unavailable";
-    
+
     // Extract the date value
     let dateValue: string | number;
-    
+
     // Handle object with $date property
     if (typeof dateString === "object" && "$date" in dateString) {
       dateValue = dateString.$date;
     } else {
       dateValue = dateString as string;
     }
-    
+
     // Create date from the extracted value
-    const date = typeof dateValue === 'number' 
-      ? new Date(dateValue) 
-      : new Date(dateValue);
-    
+    const date =
+      typeof dateValue === "number" ? new Date(dateValue) : new Date(dateValue);
+
     // Check if date is valid
     if (isNaN(date.getTime())) {
       return "Invalid date";
     }
-    
+
     return date.toLocaleDateString("en-US", {
       year: "numeric",
       month: "short",
@@ -88,30 +88,59 @@ const formatDate = (dateString: string | { $date: string | number } | undefined)
 // Helper function to map news source to appropriate icon
 const getSourceIcon = (url: string) => {
   if (!url) return <Globe className="h-6 w-6" />;
-  
+
   const domain = url.toLowerCase();
-  
-  if (domain.includes('newsfirst')) return <Image width={200} height={200} src="/images/newsfirst.jpeg" alt="News First" className="h-6 w-6" />;
-  if (domain.includes('adaderana')) return <Image width={200} height={200} src="/images/derana.png" alt="News First" className="h-6 w-6" />;
-  if (domain.includes('hirunews')) return <Image width={200} height={200} src="/images/hiru.jpg" alt="News First" className="h-6 w-6" />;
-  
+
+  if (domain.includes("newsfirst"))
+    return (
+      <Image
+        width={200}
+        height={200}
+        src="/images/newsfirst.jpeg"
+        alt="News First"
+        className="h-6 w-6"
+      />
+    );
+  if (domain.includes("adaderana"))
+    return (
+      <Image
+        width={200}
+        height={200}
+        src="/images/derana.png"
+        alt="News First"
+        className="h-6 w-6"
+      />
+    );
+  if (domain.includes("hirunews"))
+    return (
+      <Image
+        width={200}
+        height={200}
+        src="/images/hiru.jpg"
+        alt="News First"
+        className="h-6 w-6"
+      />
+    );
+
   // Default icon for other sources
   return <Globe className="h-6 w-6" />;
 };
 
-
 const page = async ({ params }: PageProps) => {
-
   const id = params.id;
-  const category = params.category.charAt(0).toUpperCase() + params.category.slice(1);
-  
+  const category =
+    params.category.charAt(0).toUpperCase() + params.category.slice(1);
+
   let news: NewsItem | null = null;
   let error: string | null = null;
 
   try {
-    const response = await fetch(`http://127.0.0.1:8000/api/news?category=${category}&id=${id}`, {
-      next: { revalidate: 60 } 
-    });
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/news?category=${category}&id=${id}`,
+      {
+        next: { revalidate: 60 },
+      }
+    );
 
     if (!response.ok) {
       throw new Error(`API responded with status: ${response.status}`);
@@ -127,27 +156,30 @@ const page = async ({ params }: PageProps) => {
     console.error("Fetch error:", err);
     error = "Failed to fetch news. Please try again later.";
   }
-  
+
   if (!news) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="p-6 max-w-sm mx-auto bg-white rounded-xl shadow-md flex items-center space-x-4">
           <div>
             <div className="text-xl font-medium text-black">Error</div>
-            <p className="text-gray-500">{error || "Failed to load news content"}</p>
+            <p className="text-gray-500">
+              {error || "Failed to load news content"}
+            </p>
           </div>
         </div>
       </div>
     );
   }
-  
+
   const isGroup = !!news.articles && news.articles.length > 0;
   const mainArticle = isGroup && news.articles ? news.articles[0] : news;
-  
+
   // Extract unique sources if it's a group
-  const uniqueSources = isGroup && news.articles 
-    ? [...new Set(news.articles.map(article => article.url))]
-    : [];
+  const uniqueSources =
+    isGroup && news.articles
+      ? [...new Set(news.articles.map((article) => article.url))]
+      : [];
 
   return (
     <div className="min-h-screen w-full flex flex-col items-center bg-background p-4 md:p-6">
@@ -214,7 +246,6 @@ const page = async ({ params }: PageProps) => {
               <div className="p-2 rounded-full bg-secondary hover:bg-secondary/80 transition-colors">
                 {getSourceIcon(news.source)}
               </div>
-              
             </a>
           ) : uniqueSources.length > 0 ? (
             <div className="flex flex-wrap gap-4">
@@ -230,7 +261,6 @@ const page = async ({ params }: PageProps) => {
                   <div className="p-3 rounded-full bg-secondary hover:bg-secondary/80 transition-colors mb-2">
                     {getSourceIcon(source)}
                   </div>
-                  
                 </a>
               ))}
             </div>
@@ -240,7 +270,7 @@ const page = async ({ params }: PageProps) => {
         </section>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default page
+export default page;

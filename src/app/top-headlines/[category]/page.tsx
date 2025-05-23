@@ -1,5 +1,4 @@
 import EverythingCard from "@/components/EverythingCard";
-import InfiniteCarousel from "@/components/NewsSlider";
 import { dummy } from "@/utils/dummyData";
 
 interface Article {
@@ -37,25 +36,26 @@ interface PageProps {
 }
 
 export default async function TopHeadlines({ params }: PageProps) {
-  const category = params.category.charAt(0).toUpperCase() + params.category.slice(1);
-  
+  const category =
+    params.category.charAt(0).toUpperCase() + params.category.slice(1);
+
   let data: TopHeadlineItem[] = [];
   let error = null;
-  
+
   try {
     const response = await fetch(
-      `http://127.0.0.1:8000/api/news?category=${encodeURIComponent(
-        category || "general"
-      )}`,
-      { cache: 'no-store' }
+      `${
+        process.env.NEXT_PUBLIC_API_BASE_URL
+      }/api/news?category=${encodeURIComponent(category || "general")}`,
+      { cache: "no-store" }
     );
-    
+
     if (!response.ok) {
       throw new Error(`Network response was not ok: ${response.status}`);
     }
-    
+
     const json = await response.json();
-    
+
     if (json.success) {
       data = json.data;
     } else {
@@ -71,7 +71,7 @@ export default async function TopHeadlines({ params }: PageProps) {
       (item) => item.category === category || item.group_id === category
     );
   }
-  
+
   return (
     <div className="bg-background p-2 md:p-16">
       {error && <div className="text-red-500 mb-4">{error}</div>}
@@ -113,7 +113,8 @@ export default async function TopHeadlines({ params }: PageProps) {
                 summary={element.long_summary}
                 imgUrl={
                   isGroup
-                    ? element.articles?.[0]?.cover_image || "/images/News_web.jpg"
+                    ? element.articles?.[0]?.cover_image ||
+                      "/images/News_web.jpg"
                     : element.cover_image || "/images/News_web.jpg"
                 }
                 publishedDate={
