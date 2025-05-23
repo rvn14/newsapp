@@ -1,6 +1,7 @@
 import { dummy } from "@/utils/dummyData";
 import Highlights from "@/components/Highlights";
 import PaginatedNewsList from "@/components/PaginatedNewsList";
+import PaginatedNewsList from "@/components/PaginatedNewsList";
 
 // Consider moving this interface to a shared types file
 interface NewsItem {
@@ -21,9 +22,12 @@ const HomePage = async () => {
   let error: string | null = null;
 
   try {
-    const response = await fetch("http://127.0.0.1:8000/api/latest-news", {
-      next: { revalidate: 60 },
-    });
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/latest-news`,
+      {
+        next: { revalidate: 60 },
+      }
+    );
 
     if (!response.ok) {
       throw new Error(`API responded with status: ${response.status}`);
