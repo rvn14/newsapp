@@ -1,6 +1,6 @@
 import { dummy } from "@/utils/dummyData";
 import Highlights from "@/components/Highlights";
-import PaginatedNewsList from "@/components/PaginatedNewsList"; 
+import PaginatedNewsList from "@/components/PaginatedNewsList";
 
 // Consider moving this interface to a shared types file
 interface NewsItem {
@@ -16,26 +16,26 @@ interface NewsItem {
   category?: string;
 }
 
-
 const HomePage = async () => {
   let data: NewsItem[] = [];
   let error: string | null = null;
-  
+
   try {
-    
-    const response = await fetch("http://127.0.0.1:8000/api/latest-news", {
-      next: { revalidate: 60 } 
-    });
-    
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/latest-news`,
+      {
+        next: { revalidate: 60 },
+      }
+    );
+
     if (!response.ok) {
       throw new Error(`API responded with status: ${response.status}`);
     }
-    
+
     const result = await response.json();
     if (result.success) {
       data = result.data;
       console.log(data);
-      
     } else {
       error = result.message || "An error occurred";
     }
@@ -43,12 +43,11 @@ const HomePage = async () => {
     console.error("Fetch error:", err);
     error = "Failed to fetch news. Please try again later.";
   }
-  
+
   const newsData = data.length > 0 ? data : dummy;
 
   return (
     <div className="bg-background p-2 md:p-16">
-      
       <div className="pt-6 pb-16 flex justify-center items-center">
         <Highlights dummy={newsData} />
       </div>
@@ -58,7 +57,6 @@ const HomePage = async () => {
         </div>
         <div className="border-1 border-primary w-full opacity-60 mb-8"></div>
       </div>
-      
 
       <PaginatedNewsList newsItems={newsData} />
     </div>
