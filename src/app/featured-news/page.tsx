@@ -80,7 +80,14 @@ const FeaturedNewsPage = () => {
     // Sort in reverse chronological order (newest first)
     return b.localeCompare(a);
   });
+  type FeatureArticle = {
+    [key: string]: string; // articleKey: articleContent
+  };
 
+  type NewsItem = {
+    id: string | number;
+    feature_articles: FeatureArticle;
+  };
   // Calculate pagination
   const totalPages = Math.ceil(sortedKeys.length / weeksPerPage);
   const startIdx = (currentPage - 1) * weeksPerPage;
@@ -101,7 +108,7 @@ const FeaturedNewsPage = () => {
         <div className="flex flex-col ">
           {currentKeys.map((key) => (
             <React.Fragment key={key}>
-              {data[key]?.map((item: any) => (
+              {data[key]?.map((item: NewsItem) => (
                 <div key={item.id} className="w-full mb-8 ">
                   <h2 className="text-2xl font-semibold text-primary mb-6 pl-2 border-l-4 border-red-500">
                     {formatDateKey(key)}
