@@ -1,7 +1,6 @@
 import { dummy } from "@/utils/dummyData";
 import Highlights from "@/components/Highlights";
 import PaginatedNewsList from "@/components/PaginatedNewsList";
-import PaginatedNewsList from "@/components/PaginatedNewsList";
 
 // Consider moving this interface to a shared types file
 interface NewsItem {
